@@ -1,5 +1,6 @@
 import { 
     Avatar, 
+    Box, 
     Flex, 
     Spacer, 
     Text, 
@@ -7,6 +8,7 @@ import {
     useClipboard
 } from '@chakra-ui/react';
 import * as React from 'react';
+import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 import useAccount from './useAccount';
 
 
@@ -20,12 +22,11 @@ function Account() {
     const {account} = useAccount();
     const copyValue: string = account.account ? account.account : DEFAULT_ACCOUNT_NAME_VALUE;
     const {onCopy, hasCopied} = useClipboard(copyValue);
+    const {isPhoneHardware, hardware} = useGlobalSettings();
 
 
     const nameAccountTextStyle = {
-        alignSelf: 'center',
-        fontSize: 20,
-        maxWidth: '150px',
+        maxWidth: isPhoneHardware(hardware) ? '300px' : '150px',
         noOfLines: 1
     }
 
@@ -34,8 +35,12 @@ function Account() {
         <Flex
             direction = {'row'}
         >
-            <Avatar size = {'lg'}/>
+            <Avatar size = {isPhoneHardware(hardware) ? '2xl' : 'lg'}/>
             <Spacer/>
+            <Box 
+                alignSelf={'center'} 
+                fontSize = {isPhoneHardware(hardware) ? '30px' : '20px'}
+            >
             {
                 account.account ? 
                 <Tooltip 
@@ -58,6 +63,7 @@ function Account() {
                     {DEFAULT_ACCOUNT_NAME_VALUE}
                 </Text>
             }
+            </Box>
         </Flex>
     );
 }

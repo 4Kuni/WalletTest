@@ -6,23 +6,30 @@ import {
     Text,
     useColorMode
 } from '@chakra-ui/react';
+import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 
 
 
 function ThemeSwitcher(): JSX.Element {
 
     const {colorMode, toggleColorMode} = useColorMode();
+    const {isPhoneHardware, hardware} = useGlobalSettings();
 
 
     return (
         <Flex alignItems = {'center'} direction = {'row'}>
             <Text
+                fontSize = {isPhoneHardware(hardware) ? '30px' : '20px'}
                 fontWeight={'bold'}
             >
                 Dark Mode
             </Text>
             <Spacer/>
-            <Switch isChecked = {colorMode === 'dark'} onChange = {toggleColorMode}/>
+            <Switch 
+                isChecked = {colorMode === 'dark'} 
+                onChange = {toggleColorMode} 
+                size = {isPhoneHardware(hardware) ? 'lg' : 'md'}
+            />
         </Flex>
     );
 }

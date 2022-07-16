@@ -68,7 +68,7 @@ export default function useConnector(): UseConnectorReturnValue {
             setConnector(connector);
         }
         catch(error) {
-            alert(error);
+            alert('Invalid URI format');
         }
         
     }

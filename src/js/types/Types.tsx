@@ -41,6 +41,12 @@ export interface IAccountProvider {
     onDisconnect: () => void
 }
 
+export interface IGlobalSettingsProvider {
+    isPortraitOrientation: boolean
+    hardware: Hardware
+    isPhoneHardware: (hardware: Hardware) => boolean
+}
+
 export interface IProviderProps extends IHasChildrenProps { }
 
 export interface IHasChildrenProps {
@@ -66,3 +72,6 @@ export interface IExchange {
     USD: number
     EUR: number
 } 
+
+export type Hardware = HardwarePhone | 'windows';
+export type HardwarePhone = 'iphone' | 'android';

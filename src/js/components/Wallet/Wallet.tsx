@@ -6,6 +6,7 @@ import {
     Box
 } from '@chakra-ui/react';
 import * as React from 'react';
+import useGlobalSettings from '../../GlobalSettings/useGlobalSettings';
 import useEthereumProvider from '../EthereumProvider/useEthereumProvider';
 import useAccount from '../SideBar/Account/useAccount';
 import AlertDialogMetamask from './AlertDialogMetamask/AlertDialogMetamask';
@@ -27,11 +28,15 @@ function Wallet(): JSX.Element {
     const {providerState, detectProvider} = useEthereumProvider();
     const [isAlertDialogOpen, setIsAlertDialogOpen] = React.useState<boolean>(false);
     const {account} = useAccount();
+    const {isPhoneHardware, hardware} = useGlobalSettings();
+    const [isButtonAccessible, setIsButtonAccessible] = React.useState<boolean>(true);
 
 
     const connectMetamask = React.useCallback(async () => {
 
         if(!providerState) {
+
+            setIsButtonAccessible(false);
 
             const isDetected = await detectProvider();
 
@@ -45,6 +50,7 @@ function Wallet(): JSX.Element {
 
     const onCloseAlertDialog = React.useCallback(() => {
 
+        setIsButtonAccessible(true);
         setIsAlertDialogOpen(false)
     }, []);
 
@@ -65,7 +71,7 @@ function Wallet(): JSX.Element {
                 (
                     (account.account !== null && account.balance !== null) ? 
                     <Flex direction = {'column'} height = {'100%'}>
-                        <Box mt = {10} opacity = {0.5}>
+                        <Box opacity = {0.5}>
                             <Exchange/>
                         </Box>
                         <Spacer/>
@@ -80,7 +86,16 @@ function Wallet(): JSX.Element {
                 :   
                 <>
                     <Square sx = {squareSizeStyle}>
-                        <Button bg = {'positiveButton'} w = {'250px'} onClick = {connectMetamask}>Connect Wallet</Button>
+                        <Button 
+                            isLoading = {!isButtonAccessible}
+                            bg = {'positiveButton'} 
+                            w = {isPhoneHardware(hardware) ? '60%' : '250px'} 
+                            h = {isPhoneHardware(hardware) ? '100px' : '50px'}
+                            fontSize = {isPhoneHardware(hardware) ? 50 : 18}
+                            onClick = {connectMetamask}
+                        >
+                            Connect Wallet
+                        </Button>
                     </Square>
                     <AlertDialogMetamask 
                         isOpen = {isAlertDialogOpen}

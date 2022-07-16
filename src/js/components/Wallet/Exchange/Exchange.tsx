@@ -58,7 +58,7 @@ function Exchange(): JSX.Element {
 
     
     const updateExhange = React.useCallback(() => {
-        console.log('exchange');
+        
         getExchange()
         .then((result: IExchange) => {
             setExchange(result);
@@ -68,7 +68,7 @@ function Exchange(): JSX.Element {
     }, []);
 
     React.useEffect(() => {
-        console.log('balance');
+        
         updateExhange();
     }, [account.balance]);
 
@@ -77,7 +77,7 @@ function Exchange(): JSX.Element {
 
 
     return (
-        <Flex pb = {20} direction = {'column'} width = {'100%'} gap = {5}>
+        <Flex direction = {'column'} width = {'100%'} gap = {5}>
             <Flex direction = {'row'}>
                 <Heading>Exchange Rates</Heading>
                 <Spacer/>

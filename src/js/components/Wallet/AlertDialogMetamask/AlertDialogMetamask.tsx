@@ -11,6 +11,7 @@ import {
     Text
 } from '@chakra-ui/react';
 import * as React from 'react';
+import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 import { IAlertDialogMetamaskProps } from '../../../types/Types';
 
 
@@ -18,20 +19,30 @@ import { IAlertDialogMetamaskProps } from '../../../types/Types';
 function AlertDialogMetamask({isOpen, onClose}: IAlertDialogMetamaskProps): JSX.Element {
 
     const downloadRef = React.useRef<any>();
+    const {isPhoneHardware, hardware} = useGlobalSettings();
 
     return (
         <AlertDialog 
             isOpen = {isOpen}
             leastDestructiveRef={downloadRef}
             onClose = {onClose}
+            size = {isPhoneHardware(hardware) ? '2xl' : 'md'}
         >
             <AlertDialogOverlay/>
-            <AlertDialogContent bg = {'alertDialogWindow'}>
-                <AlertDialogHeader>
+            <AlertDialogContent 
+                height = {isPhoneHardware(hardware) ? '300px' : '200px'} 
+                bg = {'alertDialogWindow'}
+            >
+                <AlertDialogHeader fontSize = {isPhoneHardware(hardware) ? 40 : 20}>
                     Metamask is missing!
                 </AlertDialogHeader>
-                <AlertDialogBody>
-                    <Text>You have to download Metamask to your browser!</Text>
+                <AlertDialogBody fontSize = {isPhoneHardware(hardware) ? 30 : 15}>
+                    {
+                        isPhoneHardware(hardware) ?
+                        <Text>Please, open your Metamask app and go to this site by browser in the app</Text>
+                        :
+                        <Text>You have to download Metamask to your browser!</Text>
+                    }
                 </AlertDialogBody>
                 <AlertDialogFooter>
                     <LinkBox>
@@ -39,10 +50,16 @@ function AlertDialogMetamask({isOpen, onClose}: IAlertDialogMetamaskProps): JSX.
                             onClick = {onClose} 
                             bg = {'positiveButton'} 
                             ref = {downloadRef}
+                            fontSize = {isPhoneHardware(hardware) ? 30 : 15}
                         >
-                            <LinkOverlay isExternal href = {'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'}>
-                                Download Metamask
-                            </LinkOverlay>
+                            {
+                                isPhoneHardware(hardware) ?
+                                <Text p = {7} >Okey!</Text>
+                                :
+                                <LinkOverlay isExternal href = {'https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn'}>
+                                    Download Metamask
+                                </LinkOverlay>
+                            }
                         </Button>
                     </LinkBox>
                 </AlertDialogFooter>
