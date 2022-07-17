@@ -2,55 +2,58 @@ import { useMediaQuery } from '@chakra-ui/react';
 import * as React from 'react';
 import EthereumProvider from '../components/EthereumProvider/EthereumProvider';
 import AccountProvider from '../components/SideBar/Account/AccountProvider';
-import { Hardware, IGlobalSettingsProvider, IProviderProps } from '../types/Types';
+import useReloadElement from '../hooks/useReloadElement';
+import { Hardware, IGlobalSettingsProvider, IProviderProps, MainContent } from '../types/Types';
 
 
 
-const DEFAULT_HARDWARE_TYPE = 'windows'
-const hardwareTypes: Hardware[] = ['iphone', 'android', 'windows'];
+const DEFAULT_HARDWARE_TYPE = 'windows';
+const HARDWARE_TYPES: Hardware[] = ['iphone', 'android', 'windows', 'mac'];
+const DEFAULT_MAIN_CONTENT_VALUE: MainContent = 'wallet';
 let hardware: Hardware;
 
-const isPhoneHardware = (hardware: Hardware): boolean => {
-
-    return hardware === 'android' || hardware === 'iphone';
+function isPhoneHardware(hardware: Hardware): boolean {
+    const f = (hardware === 'android' || hardware === 'iphone');
+    return f;
 }
 
 const DEFAULT_CONTEXT_VALUE: IGlobalSettingsProvider = {
     hardware: DEFAULT_HARDWARE_TYPE,
-    isPortraitOrientation: false,
-    isPhoneHardware
+    isPhoneHardware,
+    mainContent: 'wallet',
+    setMainContent: () => {}
 }
 
-export const GlobalSettingsContext = React.createContext<IGlobalSettingsProvider>(DEFAULT_CONTEXT_VALUE);
-
-
-const detectHardware = (): Hardware => {
+function detectHardware(): Hardware {
 
     const userAgent = window.navigator.userAgent.toLowerCase();
 
-    for(let i = 0; i < hardwareTypes.length; i++) {
+    for(let i = 0; i < HARDWARE_TYPES.length; i++) {
 
-        if(userAgent.includes(hardwareTypes[i])) return hardwareTypes[i];
+        if(userAgent.includes(HARDWARE_TYPES[i])) return HARDWARE_TYPES[i];
     }
 
     return DEFAULT_HARDWARE_TYPE;
 }
 
+export const GlobalSettingsContext = React.createContext<IGlobalSettingsProvider>(DEFAULT_CONTEXT_VALUE);
+
 
 
 export default function GlobalSettingsProvider({children}: IProviderProps): JSX.Element {
 
-    const [isPortraitOrientation] = useMediaQuery(['(orientation: portrait)']);
-
+    const [mainContent, setMainContent] = React.useState<MainContent>(DEFAULT_MAIN_CONTENT_VALUE);
+    const {reloadElement} = useReloadElement();
 
     React.useEffect(() => {
-
+        
         hardware = detectHardware();
+        reloadElement();
     }, []);
 
 
     return (
-        <GlobalSettingsContext.Provider value = {{isPortraitOrientation, hardware, isPhoneHardware}}>
+        <GlobalSettingsContext.Provider value = {{hardware, isPhoneHardware, mainContent, setMainContent}}>
             <EthereumProvider>
                 <AccountProvider>
                     {children}

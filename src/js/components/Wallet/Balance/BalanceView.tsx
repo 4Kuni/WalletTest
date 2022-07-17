@@ -19,22 +19,21 @@ function BalanceView({accountBalance}: IBalanceViewProps): JSX.Element {
 
 
     return (
-        <Flex width = {'100%'} direction = {'row'}>
-            <Image mb = {14} alignSelf = {'end'} boxSize = {'75px'} src = {ethImage} />
+        <Flex direction = {'row'}>
+            <Image mb = {12} alignSelf = {'end'} boxSize = {isPhoneHardware(hardware) ? '140px' : '75px'} src = {ethImage} />
             <Flex direction = {'column'}>
                 <Spacer/>
                 <Text 
-                    fontSize={87}
-                    m = {4}
-                    mb = {8}
+                     fontSize = {isPhoneHardware(hardware) ? 143 : 87}
+                    pb = {6}
                 >
                     ETH
                 </Text>
             </Flex>
             <Spacer/>
             <Box>
-                <Heading opacity = {0.5} size = {isPhoneHardware(hardware) ? '3xl' : '2xl'}>balance</Heading>
-                <Text textAlign={'end'} fontSize = {isPhoneHardware(hardware) ? 263 : 175}>
+                <Heading opacity = {0.5} size = {isPhoneHardware(hardware) ? '4xl' : '2xl'}>balance</Heading>
+                <Text textAlign={'end'} fontSize = {isPhoneHardware(hardware) ? 300 : 175}>
                     {accountBalance}
                 </Text>
             </Box>

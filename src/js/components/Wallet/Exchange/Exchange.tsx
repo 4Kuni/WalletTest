@@ -1,5 +1,6 @@
 import { Flex, Heading, Spacer, Square, Text, Tooltip } from '@chakra-ui/react';
 import * as React from 'react';
+import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 import { IExchange } from '../../../types/Types';
 import useAccount from '../../SideBar/Account/useAccount';
 import WaitingView from '../WaitingView/WaitingView';
@@ -45,11 +46,12 @@ function Exchange(): JSX.Element {
 
     const {account} = useAccount();
     const [exchange, setExchange] = React.useState<IExchange | null>(null);
-    
+    const {isPhoneHardware, hardware} = useGlobalSettings();
+
 
     const currencyTextStyle = {
         maxW: '250px',
-        fontSize: 30,
+        fontSize: isPhoneHardware(hardware) ? 40 : 30,
         noOfLines: 1,
         _hover: {
             fontWeight: 'bold'
@@ -79,15 +81,15 @@ function Exchange(): JSX.Element {
     return (
         <Flex direction = {'column'} width = {'100%'} gap = {5}>
             <Flex direction = {'row'}>
-                <Heading>Exchange Rates</Heading>
+                <Heading size = {isPhoneHardware(hardware) ? '3xl' : '2xl'}>Exchange Rates</Heading>
                 <Spacer/>
-                <Heading >In transfer</Heading>
+                <Heading size = {isPhoneHardware(hardware) ? '3xl' : '2xl'}>In transfer</Heading>
             </Flex>
             {
                 exchange ?
                 Object.keys(exchange).map(currency => (
                     <Flex key = {currency} direction = {'row'} gap = {3}>
-                        <Text fontSize = {30}>{currency}</Text>
+                        <Text fontSize = {isPhoneHardware(hardware) ? 40 : 30}>{currency}</Text>
                         <Tooltip 
                             label = {exchange[currency as keyof typeof exchange]}
                         >
@@ -109,7 +111,7 @@ function Exchange(): JSX.Element {
                                 {parseCurrencyText(account.balance! * exchange[currency as keyof typeof exchange])}
                             </Text>
                         </Tooltip>
-                        <Text fontSize = {30}>{currency}</Text>
+                        <Text  fontSize = {isPhoneHardware(hardware) ? 40 : 30}>{currency}</Text>
                     </Flex>
                 ))
                 :

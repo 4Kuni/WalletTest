@@ -26,7 +26,7 @@ function AlertDialogMetamask({isOpen, onClose}: IAlertDialogMetamaskProps): JSX.
             isOpen = {isOpen}
             leastDestructiveRef={downloadRef}
             onClose = {onClose}
-            size = {isPhoneHardware(hardware) ? '2xl' : 'md'}
+            size = {isPhoneHardware(hardware) ? '3xl' : 'xl'}
         >
             <AlertDialogOverlay/>
             <AlertDialogContent 
@@ -41,7 +41,7 @@ function AlertDialogMetamask({isOpen, onClose}: IAlertDialogMetamaskProps): JSX.
                         isPhoneHardware(hardware) ?
                         <Text>Please, open your Metamask app and go to this site by browser in the app</Text>
                         :
-                        <Text>You have to download Metamask to your browser!</Text>
+                        <Text>You have to download Metamask to your chrome browser!</Text>
                     }
                 </AlertDialogBody>
                 <AlertDialogFooter>

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 import { 
     IProviderProps,
     IAccountProvider,
@@ -41,6 +42,7 @@ export default function AccountProvider({children}: IProviderProps) {
     const {providerState, removeProvider, forgetProvider, saveProvider} = useEthereumProvider();
     const [account, setAccount] = React.useState<IAccount>(DEFAULT_ACCOUNT_VALUE);
     const disconnectDapp = React.useRef<(() => void) | null>(null);
+    const {setMainContent} = useGlobalSettings();
 
 
     const onDisconnect = (): void => {
@@ -57,6 +59,8 @@ export default function AccountProvider({children}: IProviderProps) {
         const setDataAccount = (accountName: string) => {
 
             saveProvider();
+            setMainContent('wallet');
+            
             let acc: IAccount = {...account, account: accountName} 
         
             providerState!.request({method: 'eth_getBalance', params: [accountName, 'latest']})

@@ -42,9 +42,10 @@ export interface IAccountProvider {
 }
 
 export interface IGlobalSettingsProvider {
-    isPortraitOrientation: boolean
     hardware: Hardware
     isPhoneHardware: (hardware: Hardware) => boolean
+    setMainContent: React.Dispatch<React.SetStateAction<MainContent>>
+    mainContent: MainContent
 }
 
 export interface IProviderProps extends IHasChildrenProps { }
@@ -73,5 +74,7 @@ export interface IExchange {
     EUR: number
 } 
 
-export type Hardware = HardwarePhone | 'windows';
+export type Hardware = HardwarePhone | 'windows' | 'mac';
 export type HardwarePhone = 'iphone' | 'android';
+
+export type MainContent = 'transactions' | 'wallet';

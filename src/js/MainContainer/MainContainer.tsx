@@ -3,10 +3,12 @@ import {
     Button,
     Flex,
     Image,
+    Square,
     useBreakpointValue
   } from "@chakra-ui/react";
 import * as React from "react"
 import SideBar, { SideBarDrawer } from "../components/SideBar/SideBar";
+import Transactions from "../components/Transactions/Transactions";
 import Wallet from "../components/Wallet/Wallet";
 import useGlobalSettings from '../GlobalSettings/useGlobalSettings';
 
@@ -16,11 +18,12 @@ function MainContainer(): JSX.Element {
 
     const [isSideBarOpened, setIsSideBarOpened] = React.useState(true);
     const isSideBarDrawer = useBreakpointValue<boolean>({
-        md: false, 
+        lg: false,
+        md: true, 
         sm: true,
         base: true
     });
-    const {hardware, isPhoneHardware} = useGlobalSettings();
+    const {hardware, isPhoneHardware, mainContent} = useGlobalSettings();
 
 
     React.useEffect(() => {
@@ -37,34 +40,54 @@ function MainContainer(): JSX.Element {
   
     return (
     <Flex 
-        justifyContent = {'center'} 
-        width = {'100%'} 
-        direction = {isPhoneHardware(hardware) ? 'column' :{base: 'column', md: 'row'}} 
-        height = {window.innerHeight}
+        direction = {isPhoneHardware(hardware) ? 'column' :{base: 'column', lg: 'row'}} 
+        bg = {'walletBackground'}
+        justifyContent = {'center'}
+        minHeight = {isPhoneHardware(hardware) ?  window.screen.height * window.devicePixelRatio : window.innerHeight}
     >
-        <Box bgColor = {'walletBackground'} width = {isPhoneHardware(hardware) ? '100%' : {base: '100%', md: '600px'}} overflow = {'hidden'}>
+        <Box 
+            width = {(isSideBarDrawer || isPhoneHardware(hardware)) ? '100%' : '350px'}
+            bgColor = {'walletBackground'}
+            borderLeftWidth = {1}
+            borderColor = {'sideBarBackground'}
+            position = {'sticky'}
+            top = {0}
+        >
+            <Box position = {'sticky'} top = {0}>
             { isSideBarDrawer || isPhoneHardware(hardware) ?
-                <Box>
-                        <Button 
-                            mt = {10}
-                            ml = {10}
-                            pb = {10}
+                <>
+                        <Button
+                            ml = {5}
+                            mt = {5}
                             variant = {'ghost'}
                             onClick = {() => setIsSideBarOpened(true)}
                         >
                             <Image 
-                                boxSize = {isPhoneHardware(hardware) ? '60px' : '30px'} 
+                                boxSize = {isPhoneHardware(hardware) ? '60px' : '30px'}
                                 src = {'https://freeiconshop.com/wp-content/uploads/edd/menu-outline.png'}
                             />
                         </Button>
                         <SideBarDrawer isOpen = {isSideBarOpened} onClose = {onCloseSideBarDrawer} />
-                </Box>
+                </>
                 :
                 <SideBar/>
             }
+            </Box>
         </Box>
-        
-        <Wallet/>
+        <Flex 
+            flex = {1}
+            maxWidth = {'6xl'}
+            borderRightWidth = {1}
+            borderColor = {'sideBarBackground'}
+        >
+            {
+                mainContent === 'wallet' ?
+                
+                <Wallet/>
+                :
+                <Transactions/>
+            }
+        </Flex>
     </Flex>
     );
 }

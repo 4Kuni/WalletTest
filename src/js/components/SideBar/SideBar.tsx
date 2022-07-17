@@ -14,11 +14,13 @@ import Dapp from './Dapp/Dapp';
 import ThemeSwitcher from './ThemeSwitcher/ThemeSwitcher';
 import { ISideBarDrawerProps } from '../../types/Types';
 import useGlobalSettings from '../../GlobalSettings/useGlobalSettings';
+import useAccount from './Account/useAccount';
 
 
 function SideBar(): JSX.Element {
     
-    const {hardware, isPhoneHardware} = useGlobalSettings();
+    const {hardware, isPhoneHardware, mainContent, setMainContent} = useGlobalSettings();
+    const {account} = useAccount();
 
 
     return (
@@ -27,17 +29,31 @@ function SideBar(): JSX.Element {
             borderRightRadius={isPhoneHardware(hardware) ? 0 : 15} 
             direction = {'column'}
             bgColor = {'sideBarBackground'}
-            px = {10}
-            height = {'100%'}
-            width = {'100%'}
             gap = {isPhoneHardware(hardware) ? 20 : 10}
+            minHeight = {window.innerHeight}
+            py = {5}
         >   
-            <Box pt = {10}>
+            <Box mx = {5}>
                 <Account/>
             </Box>
+            
+            <Button 
+                pl = {3}
+                borderRadius = {0}
+                _hover = {{
+                    opacity: 0.5
+                }}
+                isDisabled = {account.account === null}
+                variant = {'ghost'}
+                justifyContent = {'start'}
+                fontSize = {isPhoneHardware(hardware) ? '30px' : '20px'}
+                onClick = {() => mainContent === 'wallet' ? setMainContent('transactions') : setMainContent('wallet')}
+            >
+                {mainContent === 'wallet' ? 'Transactions' : 'Wallet'}
+            </Button>
+
             <Dapp/>
             <ThemeSwitcher/>
-            <Spacer/>
         </Flex>
     );
 }

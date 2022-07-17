@@ -19,6 +19,7 @@ function ThemeSwitcher(): JSX.Element {
     return (
         <Flex alignItems = {'center'} direction = {'row'}>
             <Text
+                pl = {3}
                 fontSize = {isPhoneHardware(hardware) ? '30px' : '20px'}
                 fontWeight={'bold'}
             >
@@ -26,6 +27,7 @@ function ThemeSwitcher(): JSX.Element {
             </Text>
             <Spacer/>
             <Switch 
+                mr = {3}
                 isChecked = {colorMode === 'dark'} 
                 onChange = {toggleColorMode} 
                 size = {isPhoneHardware(hardware) ? 'lg' : 'md'}

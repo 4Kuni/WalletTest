@@ -37,6 +37,10 @@ function Wallet(): JSX.Element {
         if(!providerState) {
 
             setIsButtonAccessible(false);
+            setTimeout(() => {
+
+                setIsButtonAccessible(true); 
+            }, 5000);
 
             const isDetected = await detectProvider();
 
@@ -56,54 +60,40 @@ function Wallet(): JSX.Element {
 
 
     return (
+        providerState ?
+        (
+            (account.account !== null && account.balance !== null) ? 
+            <Flex direction = {'column'} width = {'100%'} mx = {10}>
+                <Box opacity = {0.5}>
+                    <Exchange/>
+                </Box>
+                <Spacer/>
+                <BalanceView accountBalance = {account.balance}/>
+            </Flex>
+            :
+            <Square sx = {squareSizeStyle}>
+                <WaitingView>Please, wait for data confirmation</WaitingView>
+            </Square>
+        )
         
-        <Flex 
-            width = {'100%'} 
-            height = {'100%'}
-            maxWidth = {'1500'} 
-            px = {10} 
-            bg = {'walletBackground'} 
-            direction = {'column'}
-            overflow = {'hidden'}
-        >
-            { 
-                providerState ?
-                (
-                    (account.account !== null && account.balance !== null) ? 
-                    <Flex direction = {'column'} height = {'100%'}>
-                        <Box opacity = {0.5}>
-                            <Exchange/>
-                        </Box>
-                        <Spacer/>
-                        <BalanceView accountBalance = {account.balance}/>
-                    </Flex>
-                    :
-                    <Square sx = {squareSizeStyle}>
-                        <WaitingView>Please, wait for data confirmation</WaitingView>
-                    </Square>
-                )
-                
-                :   
-                <>
-                    <Square sx = {squareSizeStyle}>
-                        <Button 
-                            isLoading = {!isButtonAccessible}
-                            bg = {'positiveButton'} 
-                            w = {isPhoneHardware(hardware) ? '60%' : '250px'} 
-                            h = {isPhoneHardware(hardware) ? '100px' : '50px'}
-                            fontSize = {isPhoneHardware(hardware) ? 50 : 18}
-                            onClick = {connectMetamask}
-                        >
-                            Connect Wallet
-                        </Button>
-                    </Square>
-                    <AlertDialogMetamask 
-                        isOpen = {isAlertDialogOpen}
-                        onClose = {onCloseAlertDialog}
-                    />
-                </>
-            }
-        </Flex>   
+        :
+
+        <Square sx = {squareSizeStyle}>
+            <Button 
+                isLoading = {!isButtonAccessible}
+                bg = {'positiveButton'} 
+                w = {isPhoneHardware(hardware) ? '60%' : '250px'} 
+                h = {isPhoneHardware(hardware) ? '100px' : '50px'}
+                fontSize = {isPhoneHardware(hardware) ? 50 : 18}
+                onClick = {connectMetamask}
+            >
+                Connect Wallet
+            </Button>
+            <AlertDialogMetamask 
+                isOpen = {isAlertDialogOpen}
+                onClose = {onCloseAlertDialog}
+            />
+        </Square>
     );
 }
 
