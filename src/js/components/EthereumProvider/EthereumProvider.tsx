@@ -1,6 +1,7 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import * as React from 'react';
 import { ethereumProviderKey } from '../../assets/local_storage_keys';
+import useReloadElement from '../../hooks/useReloadElement';
 import { 
     IEthereumProvider, 
     IProviderProps, 
@@ -27,6 +28,7 @@ export default function EthereumProvider({children}: IProviderProps) {
 
     const [providerState, setProviderState] = React.useState<IProvider | null>(null);
 
+
     const detectProvider = React.useCallback(async (): Promise<boolean> => {
 
         const ethereum = await detectEthereumProvider(); 
@@ -37,7 +39,6 @@ export default function EthereumProvider({children}: IProviderProps) {
         }
 
         const provider: IProvider = ethereum as IProvider;
-        setProviderState(previous => provider === previous ? null : provider);
         setProviderState(provider);
         //provider === window.ethereum
         return true;

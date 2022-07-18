@@ -1,5 +1,6 @@
 import * as React from 'react';
 import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
+import useReloadElement from '../../../hooks/useReloadElement';
 import { 
     IProviderProps,
     IAccountProvider,
@@ -81,7 +82,7 @@ export default function AccountProvider({children}: IProviderProps) {
         }
 
         const onAccountChanged = (accounts: string[]): void => {
-
+            
             if(accounts.length === 0) {
 
                 onDisconnect();
@@ -92,7 +93,7 @@ export default function AccountProvider({children}: IProviderProps) {
         }
         
         const onConnect = async (): Promise<void> => {
-
+            
             const changedAccount: string[] = await providerState!.request({method: 'eth_requestAccounts'});
             setDataAccount(changedAccount[0]);
         }
@@ -109,7 +110,8 @@ export default function AccountProvider({children}: IProviderProps) {
             if(providerState) {
                 
                 await subscribeEvents();
-                providerState.request({method: 'eth_requestAccounts'})
+                
+                providerState.request({method: 'eth_requestAccounts'}).then((result) => { if(result.length !== 0) setDataAccount(result[0]) })
                 .catch(error => {
 
                     if(error.code === 4001) {

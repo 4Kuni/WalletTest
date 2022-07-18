@@ -8,7 +8,11 @@ export default function useReloadElement() {
 
 
     const reloadElement = () => {
-        setState(previous => !previous)
+
+        setTimeout(() => {
+            
+            setState(previous => !previous);
+        }, 0);
     }
 
 

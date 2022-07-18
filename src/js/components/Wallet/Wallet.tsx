@@ -31,7 +31,6 @@ function Wallet(): JSX.Element {
     const {isPhoneHardware, hardware} = useGlobalSettings();
     const [isButtonAccessible, setIsButtonAccessible] = React.useState<boolean>(true);
 
-
     const connectMetamask = React.useCallback(async () => {
 
         if(!providerState) {
