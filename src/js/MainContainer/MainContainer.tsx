@@ -95,7 +95,3 @@ function MainContainer(): JSX.Element {
 
 
 export default React.memo(MainContainer);
-
-function userGlobalSettings(): { isPortraitOrientation: any; } {
-    throw new Error("Function not implemented.");
-}

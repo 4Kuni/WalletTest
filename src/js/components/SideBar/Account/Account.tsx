@@ -2,6 +2,9 @@ import {
     Avatar, 
     Box, 
     Flex, 
+    Image, 
+    LinkBox, 
+    LinkOverlay, 
     Spacer, 
     Text, 
     Tooltip,
@@ -35,7 +38,10 @@ function Account() {
         <Flex
             direction = {'row'}
         >
-            <Avatar size = {isPhoneHardware(hardware) ? '2xl' : 'lg'}/>
+            <LinkBox>
+                <LinkOverlay isExternal href = {'https://www.guy-avraham.com/'}/>
+                <Image width = {isPhoneHardware(hardware) ? '75px' : '50px'} src = {'https://www.guy-avraham.com/_next/static/media/logo.ee7c8012.svg'}/>
+            </LinkBox>
             <Spacer/>
             <Box 
                 alignSelf={'center'} 

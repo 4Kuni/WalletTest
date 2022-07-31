@@ -1,6 +1,7 @@
 import WalletConnect from '@walletconnect/client';
 import * as React from 'react';
-import useReloadElement from '../../../hooks/useReloadElement';
+import useReloadElement from '../../../utils/Hooks/useReloadElement';
+import useAlertDialogError from '../../AlertDialogErrorProvider/useAlertDialogError';
 
 
 
@@ -20,6 +21,7 @@ export default function useConnector(): UseConnectorReturnValue {
 
     const [connector, setConnector] = React.useState<WalletConnect | null>(DEFAULT_CONNECTOR_VALUE);
     const {reloadElement} = useReloadElement();
+    const {alertDialogError} = useAlertDialogError();
 
 
     React.useEffect(() => {
@@ -35,7 +37,7 @@ export default function useConnector(): UseConnectorReturnValue {
     const disconnect = React.useCallback(async () => {
 
         if(!connector) {
-            console.log('connector equals to ' + connector);
+            
             return;
         }
 
@@ -68,7 +70,7 @@ export default function useConnector(): UseConnectorReturnValue {
             setConnector(connector);
         }
         catch(error) {
-            alert('Invalid URI format');
+            alertDialogError('Invalid URI format', 'The URI format that has been entered is invalid, please, try again!', 'Okay');
         }
         
     }

@@ -1,7 +1,6 @@
 import detectEthereumProvider from '@metamask/detect-provider';
 import * as React from 'react';
 import { ethereumProviderKey } from '../../assets/local_storage_keys';
-import useReloadElement from '../../hooks/useReloadElement';
 import { 
     IEthereumProvider, 
     IProviderProps, 
@@ -16,6 +15,16 @@ const DEFAULT_ETHEREUM_PROVIDER_VALUE: IEthereumProvider = {
     detectProvider: async () => false,
     forgetProvider: () => {},
     saveProvider: () => {}
+}
+
+function forgetProvider() {
+
+    localStorage.removeItem(ethereumProviderKey);
+}
+
+function saveProvider() {
+    
+    localStorage.setItem(ethereumProviderKey, 'provider_saved');
 }
 
 
@@ -49,15 +58,7 @@ export default function EthereumProvider({children}: IProviderProps) {
         setProviderState(null);
     };
 
-    const forgetProvider = () => {
 
-        localStorage.removeItem(ethereumProviderKey);
-    }
-
-    const saveProvider = () => {
-        
-        localStorage.setItem(ethereumProviderKey, 'provider_saved');
-    }
 
     React.useEffect(() => {
 

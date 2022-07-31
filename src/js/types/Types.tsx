@@ -39,6 +39,8 @@ export interface IAccountProvider {
         current: (() => void) | null
     }
     onDisconnect: () => void
+    changeChain: (chainId: string) => Promise<boolean> | void
+    updateAccountData: (accountName: string) => void
 }
 
 export interface IGlobalSettingsProvider {
@@ -78,3 +80,49 @@ export type Hardware = HardwarePhone | 'windows' | 'mac';
 export type HardwarePhone = 'iphone' | 'android';
 
 export type MainContent = 'transactions' | 'wallet';
+
+export interface IDecToHex {
+    '1': number,
+    '2': number,
+    '3': number,
+    '4': number,
+    '5': number,
+    '6': number,
+    '7': number, 
+    '8': number,
+    '9': number,
+    '10': string
+    '11': string
+    '12': string
+    '13': string
+    '14': string
+    '15': string
+}
+
+export interface INetworksByName {
+    'EthereumRopsten': number
+    'Celo': number
+    'Polygon': number
+    'Optimism': number
+    'Arbitrum': number 
+}
+
+export interface INetworksByChainId {
+    '3': string
+    '42220': string
+    '137': string
+    '10': string
+    '42161': string 
+}   
+
+export interface IRpcUrlsByNetwork {
+    'EthereumRopsten': string
+    'Celo': string
+    'Polygon': string
+    'Optimism': string
+    'Arbitrum': string 
+}
+
+export interface IAlertDialogErrorProvider {
+    alertDialogError: (header: string, alertMessage: string, buttonMessage: string) => void
+}

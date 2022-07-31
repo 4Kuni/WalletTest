@@ -1,9 +1,9 @@
-import { useMediaQuery } from '@chakra-ui/react';
 import * as React from 'react';
 import EthereumProvider from '../components/EthereumProvider/EthereumProvider';
 import AccountProvider from '../components/SideBar/Account/AccountProvider';
-import useReloadElement from '../hooks/useReloadElement';
+import useReloadElement from '../utils/Hooks/useReloadElement';
 import { Hardware, IGlobalSettingsProvider, IProviderProps, MainContent } from '../types/Types';
+import AlertDialogErrorProvider from '../components/AlertDialogErrorProvider/AlertDialogErrorProvider';
 
 
 
@@ -54,11 +54,13 @@ export default function GlobalSettingsProvider({children}: IProviderProps): JSX.
 
     return (
         <GlobalSettingsContext.Provider value = {{hardware, isPhoneHardware, mainContent, setMainContent}}>
-            <EthereumProvider>
-                <AccountProvider>
-                    {children}
-                </AccountProvider>
-            </EthereumProvider>
+            <AlertDialogErrorProvider>
+                <EthereumProvider>
+                    <AccountProvider>
+                        {children}
+                    </AccountProvider>
+                </EthereumProvider>
+            </AlertDialogErrorProvider>
         </GlobalSettingsContext.Provider>
     );
 }

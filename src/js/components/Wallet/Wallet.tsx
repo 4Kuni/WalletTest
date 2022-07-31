@@ -31,24 +31,22 @@ function Wallet(): JSX.Element {
     const {isPhoneHardware, hardware} = useGlobalSettings();
     const [isButtonAccessible, setIsButtonAccessible] = React.useState<boolean>(true);
 
+
     const connectMetamask = React.useCallback(async () => {
 
-        if(!providerState) {
+        if(providerState) return;
 
-            setIsButtonAccessible(false);
-            setTimeout(() => {
+        setIsButtonAccessible(false);
 
-                setIsButtonAccessible(true); 
-            }, 5000);
+        const isDetected = await detectProvider();
 
-            const isDetected = await detectProvider();
-
-            if(isDetected === false) {
-                
-                setIsAlertDialogOpen(!isDetected);
-                return;
-            }
+        if(isDetected === false) {
+            
+            setIsAlertDialogOpen(!isDetected);
+            return;
         }
+
+        setIsButtonAccessible(true);
     }, [providerState]);
 
     const onCloseAlertDialog = React.useCallback(() => {

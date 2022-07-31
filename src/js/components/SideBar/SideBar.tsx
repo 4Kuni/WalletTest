@@ -15,12 +15,21 @@ import ThemeSwitcher from './ThemeSwitcher/ThemeSwitcher';
 import { ISideBarDrawerProps } from '../../types/Types';
 import useGlobalSettings from '../../GlobalSettings/useGlobalSettings';
 import useAccount from './Account/useAccount';
+import NetworkSelector from './NetworkSelector/NetworkSelector';
 
 
 function SideBar(): JSX.Element {
     
     const {hardware, isPhoneHardware, mainContent, setMainContent} = useGlobalSettings();
-    const {account} = useAccount();
+    const {account, onDisconnect} = useAccount();
+
+
+    const buttonStyle = {
+        pl: 3,
+        borderRadius: 0,
+        justifyContent: 'start',
+        fontSize: isPhoneHardware(hardware) ? '30px' : '20px' 
+    }
 
 
     return (
@@ -33,27 +42,39 @@ function SideBar(): JSX.Element {
             minHeight = {window.innerHeight}
             py = {5}
         >   
-            <Box mx = {5}>
+            <Box mx = {5} pb = {10}>
                 <Account/>
             </Box>
             
             <Button 
-                pl = {3}
-                borderRadius = {0}
+                sx = {buttonStyle}
+                isDisabled = {account.account === null || account.chainId !== 3} // ropsten chain id
+                onClick = {() => mainContent === 'wallet' ? setMainContent('transactions') : setMainContent('wallet')}
                 _hover = {{
                     opacity: 0.5
-                }}
-                isDisabled = {account.account === null}
+                }}    
                 variant = {'ghost'}
-                justifyContent = {'start'}
-                fontSize = {isPhoneHardware(hardware) ? '30px' : '20px'}
-                onClick = {() => mainContent === 'wallet' ? setMainContent('transactions') : setMainContent('wallet')}
             >
                 {mainContent === 'wallet' ? 'Transactions' : 'Wallet'}
             </Button>
-
+            
+            <NetworkSelector/>
             <Dapp/>
             <ThemeSwitcher/>
+
+            <Spacer/>
+
+            <Button 
+                sx = {buttonStyle}
+                isDisabled = {account.account === null}
+                _hover = {{
+                    opacity: 0.5
+                }}  
+                onClick = {() => { onDisconnect(); setMainContent('wallet');}}
+                variant = {'ghost'}
+            >
+                Disconnect
+            </Button>
         </Flex>
     );
 }

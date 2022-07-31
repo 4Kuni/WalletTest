@@ -23,9 +23,8 @@ import useConnector from './useConnector';
 
 const dAppWindowStyle = {
     p: 2,
-    border: '1px',
+    borderTop: '1px',
     borderColor: 'dAppWindowBorder',
-    borderBottom: 0,
     flexDirection: 'column',
     gap: 2
 }
@@ -116,7 +115,7 @@ function Dapp() {
                     )
                     :
                     <Flex minHeight = {'100px'} direction = {'row'} width = {'100%'} gap = {2} px = {5}>
-                        <Box sx = {textStyle} alignSelf = {'center'}>Please, login to your account</Box>
+                        <Box sx = {textStyle} alignSelf = {'center'}>Please, connect in your wallet</Box>
                         <Spacer/>
                         <Icon boxSize = {isPhoneHardware(hardware) ? '30px' : '20px'} alignSelf={'center'}/>
                     </Flex>
