@@ -1,20 +1,13 @@
-import * as React from 'react';
-
-
+import * as React from "react";
 
 export default function useReloadElement() {
+  const [, setState] = React.useState<Boolean>(true);
 
-    const [, setState] = React.useState<Boolean>(true);
+  const reloadElement = () => {
+    setTimeout(() => {
+      setState((previous) => !previous);
+    }, 0);
+  };
 
-
-    const reloadElement = () => {
-
-        setTimeout(() => {
-            
-            setState(previous => !previous);
-        }, 0);
-    }
-
-
-    return {reloadElement};
+  return { reloadElement };
 }

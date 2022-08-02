@@ -1,5 +1,3 @@
-import * as React from 'react';
+import * as React from "react";
 
-
-
-export const ethereumProviderKey = 'eth_provider'
+export const ethereumProviderKey = "eth_provider";

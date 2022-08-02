@@ -1,2 +1,2 @@
-const ethImage = 'https://cryptologos.cc/logos/ethereum-eth-logo.png';
+const ethImage = "https://cryptologos.cc/logos/ethereum-eth-logo.png";
 export default ethImage;
