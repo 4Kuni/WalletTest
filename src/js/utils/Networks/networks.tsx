@@ -1,5 +1,10 @@
 import * as React from 'react';
-import { INetworksByChainId, INetworksByName, IRpcUrlsByNetwork } from '../../types/Types';
+import arbitrumNetwork from '../../assets/arbitrum_network';
+import celoNetwork from '../../assets/celo_network';
+import ethereumNetwork from '../../assets/ethereum_network';
+import optimismNetwork from '../../assets/optimism_network';
+import polygonNetwork from '../../assets/polygon_network';
+import { IImagesByNetwork, INetworksByChainId, INetworksByName, IRpcUrlsByNetwork } from '../../types/Types';
 
 
 
@@ -25,4 +30,12 @@ export const RPC_URLS_BY_NETWORK: IRpcUrlsByNetwork = {
     'Polygon': 'https://polygon-rpc.com/',
     'Optimism': 'https://mainnet.optimism.io',
     'Arbitrum': 'https://arb1.arbitrum.io/rpc'
+}
+
+export const IMAGES_BY_NETWORK: IImagesByNetwork = {
+    'EthereumRopsten': ethereumNetwork,
+    'Celo': celoNetwork,
+    'Polygon': polygonNetwork,
+    'Optimism': optimismNetwork,
+    'Arbitrum': arbitrumNetwork
 }

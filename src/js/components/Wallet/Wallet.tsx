@@ -1,15 +1,12 @@
 import { 
     Flex, 
     Spacer,
-    Button,
     Square,
     Box
 } from '@chakra-ui/react';
 import * as React from 'react';
-import useGlobalSettings from '../../GlobalSettings/useGlobalSettings';
 import useEthereumProvider from '../EthereumProvider/useEthereumProvider';
-import useAccount from '../SideBar/Account/useAccount';
-import AlertDialogMetamask from './AlertDialogMetamask/AlertDialogMetamask';
+import useAccount from '../AccountProvider/useAccount';
 import BalanceView from './Balance/BalanceView';
 import Exchange from './Exchange/Exchange';
 import WaitingView from './WaitingView/WaitingView';
@@ -25,35 +22,8 @@ const squareSizeStyle = {
 
 function Wallet(): JSX.Element {
 
-    const {providerState, detectProvider} = useEthereumProvider();
-    const [isAlertDialogOpen, setIsAlertDialogOpen] = React.useState<boolean>(false);
+    const {providerState} = useEthereumProvider();
     const {account} = useAccount();
-    const {isPhoneHardware, hardware} = useGlobalSettings();
-    const [isButtonAccessible, setIsButtonAccessible] = React.useState<boolean>(true);
-
-
-    const connectMetamask = React.useCallback(async () => {
-
-        if(providerState) return;
-
-        setIsButtonAccessible(false);
-
-        const isDetected = await detectProvider();
-
-        if(isDetected === false) {
-            
-            setIsAlertDialogOpen(!isDetected);
-            return;
-        }
-
-        setIsButtonAccessible(true);
-    }, [providerState]);
-
-    const onCloseAlertDialog = React.useCallback(() => {
-
-        setIsButtonAccessible(true);
-        setIsAlertDialogOpen(false)
-    }, []);
 
 
     return (
@@ -61,7 +31,7 @@ function Wallet(): JSX.Element {
         (
             (account.account !== null && account.balance !== null) ? 
             <Flex direction = {'column'} width = {'100%'} mx = {10}>
-                <Box opacity = {0.5}>
+                <Box opacity = {1}>
                     <Exchange/>
                 </Box>
                 <Spacer/>
@@ -75,21 +45,8 @@ function Wallet(): JSX.Element {
         
         :
 
-        <Square sx = {squareSizeStyle}>
-            <Button 
-                isLoading = {!isButtonAccessible}
-                bg = {'positiveButton'} 
-                w = {isPhoneHardware(hardware) ? '60%' : '250px'} 
-                h = {isPhoneHardware(hardware) ? '100px' : '50px'}
-                fontSize = {isPhoneHardware(hardware) ? 50 : 18}
-                onClick = {connectMetamask}
-            >
-                Connect Wallet
-            </Button>
-            <AlertDialogMetamask 
-                isOpen = {isAlertDialogOpen}
-                onClose = {onCloseAlertDialog}
-            />
+        <Square sx = {squareSizeStyle} fontSize = {'32px'}>
+            Connect your wallet
         </Square>
     );
 }

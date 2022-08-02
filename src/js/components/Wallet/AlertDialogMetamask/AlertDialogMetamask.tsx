@@ -20,6 +20,7 @@ function AlertDialogMetamask({isOpen, onClose}: IAlertDialogMetamaskProps): JSX.
 
     const downloadRef = React.useRef<any>();
     const {isPhoneHardware, hardware} = useGlobalSettings();
+    
 
     return (
         <AlertDialog 

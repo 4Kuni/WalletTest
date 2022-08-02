@@ -16,7 +16,8 @@ import {
 } from '@chakra-ui/react';
 import * as React from 'react'; 
 import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
-import useAccount from '../Account/useAccount';
+import useAccount from '../../AccountProvider/useAccount';
+import useMetamask from '../../ConnectMetamask/useMetamask';
 import useConnector from './useConnector';
 
 
@@ -36,7 +37,8 @@ function Dapp() {
     const [connector, connect, disconnect] = useConnector();
     const uri = React.useRef<string>('');
     const inputRef = React.useRef<any>();
-    const {account, disconnectDapp} = useAccount();
+    const {account} = useAccount();
+    const {disconnectDapp} = useMetamask();
     const {isPhoneHardware, hardware} = useGlobalSettings();
 
 

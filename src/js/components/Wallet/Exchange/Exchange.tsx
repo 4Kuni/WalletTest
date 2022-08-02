@@ -2,13 +2,9 @@ import { Flex, Heading, Spacer, Square, Text, Tooltip } from '@chakra-ui/react';
 import * as React from 'react';
 import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 import { IExchange } from '../../../types/Types';
-import useAccount from '../../SideBar/Account/useAccount';
+import useAccount from '../../AccountProvider/useAccount';
 import WaitingView from '../WaitingView/WaitingView';
-import getExchange from './getExchange';
-
-
-
-const UPDATE_EXCHANGE_TIME = 15000;
+import ExchangeUpdater from './ExchangeUpdater/ExchangeUpdater';
 
 
 
@@ -58,28 +54,12 @@ function Exchange(): JSX.Element {
         }
     }
 
-    
-    const updateExhange = React.useCallback(() => {
-        
-        getExchange()
-        .then((result: IExchange) => {
-            setExchange(result);
-        });
-
-        if(account.balance) setTimeout(updateExhange, UPDATE_EXCHANGE_TIME);
-    }, []);
-
-    React.useEffect(() => {
-        
-        updateExhange();
-    }, [account.balance]);
-
-
     if(!account.balance) return <></>;
 
 
     return (
         <Flex direction = {'column'} width = {'100%'} gap = {5}>
+            <ExchangeUpdater setExchange = {setExchange}/>
             <Flex direction = {'row'}>
                 <Heading size = {isPhoneHardware(hardware) ? '3xl' : '2xl'}>Exchange Rates</Heading>
                 <Spacer/>

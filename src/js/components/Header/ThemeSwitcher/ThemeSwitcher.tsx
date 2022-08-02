@@ -1,6 +1,5 @@
 import * as React from 'react';
 import {
-    Flex, 
     Spacer, 
     Switch,
     Text,
@@ -17,7 +16,7 @@ function ThemeSwitcher(): JSX.Element {
 
 
     return (
-        <Flex alignItems = {'center'} direction = {'row'}>
+        <>
             <Text
                 pl = {3}
                 fontSize = {isPhoneHardware(hardware) ? '30px' : '20px'}
@@ -32,7 +31,7 @@ function ThemeSwitcher(): JSX.Element {
                 onChange = {toggleColorMode} 
                 size = {isPhoneHardware(hardware) ? 'lg' : 'md'}
             />
-        </Flex>
+        </> 
     );
 }
 

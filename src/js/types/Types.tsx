@@ -35,12 +35,17 @@ export interface IAccount {
 
 export interface IAccountProvider {
     account: IAccount
+    setAccount: React.Dispatch<React.SetStateAction<IAccount>>
+}
+
+export interface IMetamaskProvider {
     disconnectDapp: {
         current: (() => void) | null
     }
     onDisconnect: () => void
     changeChain: (chainId: string) => Promise<boolean> | void
     updateAccountData: (accountName: string) => void
+    connectMetamask: (callback: (isProviderDetected: boolean) => void) => Promise<void> | void
 }
 
 export interface IGlobalSettingsProvider {
@@ -48,6 +53,17 @@ export interface IGlobalSettingsProvider {
     isPhoneHardware: (hardware: Hardware) => boolean
     setMainContent: React.Dispatch<React.SetStateAction<MainContent>>
     mainContent: MainContent
+    connectWay: React.MutableRefObject<ConnectWay>
+}
+
+export interface IAccountContentProps {
+    setIsAccountModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setIsConnectModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+export interface IConnectWalletContentProps {
+    setIsAccountModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+    setIsConnectModalOpen: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface IProviderProps extends IHasChildrenProps { }
@@ -123,6 +139,25 @@ export interface IRpcUrlsByNetwork {
     'Arbitrum': string 
 }
 
+export interface IImagesByNetwork {
+    'EthereumRopsten': string
+    'Celo': string
+    'Polygon': string
+    'Optimism': string
+    'Arbitrum': string 
+}
+
 export interface IAlertDialogErrorProvider {
     alertDialogError: (header: string, alertMessage: string, buttonMessage: string) => void
+}
+
+export type ConnectWay = 'metamask' | 'walletconnect' | '';
+
+export interface INewBlockInfo {
+    filterId: string | null
+    hashes: string[]
+}
+
+export interface IExchangeUpdaterProps {
+    setExchange: React.Dispatch<React.SetStateAction<IExchange | null>>
 }

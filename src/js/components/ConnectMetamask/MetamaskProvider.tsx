@@ -1,15 +1,16 @@
 import * as React from 'react';
-import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
+import useGlobalSettings from '../../GlobalSettings/useGlobalSettings';
 import { 
     IProviderProps,
-    IAccountProvider,
     IAccount,
     INetworksByChainId,
-    IRpcUrlsByNetwork
- } from '../../../types/Types';
-import { NETWORKS_BY_CHAIN_ID, RPC_URLS_BY_NETWORK } from '../../../utils/Networks/networks';
-import useAlertDialogError from '../../AlertDialogErrorProvider/useAlertDialogError';
-import useEthereumProvider from '../../EthereumProvider/useEthereumProvider';
+    IRpcUrlsByNetwork,
+    IMetamaskProvider
+ } from '../../types/Types';
+import { NETWORKS_BY_CHAIN_ID, RPC_URLS_BY_NETWORK } from '../../utils/Networks/networks';
+import useAccount from '../AccountProvider/useAccount';
+import useAlertDialogError from '../AlertDialogErrorProvider/useAlertDialogError';
+import useEthereumProvider from '../EthereumProvider/useEthereumProvider';
 
 
 
@@ -20,19 +21,19 @@ const DEFAULT_ACCOUNT_VALUE: IAccount = {
     icon: null
 }
 
-const DEFAULT_ACCOUNT_CONTEXT_VALUE: IAccountProvider = {
-    account: DEFAULT_ACCOUNT_VALUE,
+const DEFAULT_ACCOUNT_CONTEXT_VALUE: IMetamaskProvider = {
     disconnectDapp: {
         current: null
     },
     onDisconnect: () => {},
     changeChain: (chainId) => {},
-    updateAccountData: () => {}
+    updateAccountData: () => {},
+    connectMetamask: () => {}
 };
 
 
 
-export const AccountContext = React.createContext<IAccountProvider>(DEFAULT_ACCOUNT_CONTEXT_VALUE);
+export const MetamaskContext = React.createContext<IMetamaskProvider>(DEFAULT_ACCOUNT_CONTEXT_VALUE);
 
 
 
@@ -43,12 +44,12 @@ function parseEth(eth: string): number {
 
 
 
-export default function AccountProvider({children}: IProviderProps) {
+export default function MetamaskProvider({children}: IProviderProps) {
 
-    const {providerState, removeProvider, forgetProvider, saveProvider} = useEthereumProvider();
-    const [account, setAccount] = React.useState<IAccount>(DEFAULT_ACCOUNT_VALUE);
+    const {providerState, removeProvider, forgetProvider, saveProvider, detectProvider} = useEthereumProvider();
+    const {account, setAccount} = useAccount();
     const disconnectDapp = React.useRef<(() => void) | null>(null);
-    const {setMainContent} = useGlobalSettings();
+    const {setMainContent, connectWay} = useGlobalSettings();
     const {alertDialogError} = useAlertDialogError();
     
 
@@ -57,8 +58,19 @@ export default function AccountProvider({children}: IProviderProps) {
         if(disconnectDapp.current !== null) disconnectDapp.current();
         forgetProvider();
         removeProvider();
+        setMainContent('wallet');
+        connectWay.current = '';
         setAccount(DEFAULT_ACCOUNT_VALUE)
     }
+
+    const connectMetamask = React.useCallback(async (callback: (isProviderDetected: boolean) => void) => {
+
+        if(providerState) return;
+
+        const isProviderDetected = await detectProvider();
+
+        callback(isProviderDetected);
+    }, [providerState]);
 
     const updateAccountData = (accountName: string) => {
 
@@ -167,6 +179,10 @@ export default function AccountProvider({children}: IProviderProps) {
                 await subscribeEvents();
                 
                 providerState.request({method: 'eth_requestAccounts'}).then((result) => { if(result.length !== 0) setDataAccount(result[0]) })
+                .then(() => {
+
+                    connectWay.current = 'metamask'
+                })
                 .catch(error => {
                     
                     if(error.code === 4001) {
@@ -182,8 +198,8 @@ export default function AccountProvider({children}: IProviderProps) {
 
 
     return (
-        <AccountContext.Provider value = {{account, disconnectDapp, onDisconnect, changeChain, updateAccountData}}>
+        <MetamaskContext.Provider value = {{disconnectDapp, onDisconnect, changeChain, updateAccountData, connectMetamask}}>
             {children}
-        </AccountContext.Provider>
+        </MetamaskContext.Provider>
     );
 }

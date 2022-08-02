@@ -4,63 +4,21 @@ import {
     Heading,
     Image, 
     Spacer,
-    Text
+    Text,
+    Tooltip
 } from '@chakra-ui/react';
 import * as React from 'react';
 import ethImage from '../../../assets/eth_image';
 import useGlobalSettings from '../../../GlobalSettings/useGlobalSettings';
 import { IBalanceViewProps } from '../../../types/Types';
-import useEthereumProvider from '../../EthereumProvider/useEthereumProvider';
-import useAccount from '../../SideBar/Account/useAccount';
+import NewBlockEvent from './NewBlockEvent/NewBlockEvent';
 
 
 
 function BalanceView({accountBalance}: IBalanceViewProps): JSX.Element {
 
     const {isPhoneHardware, hardware} = useGlobalSettings();
-    const {providerState} = useEthereumProvider();
-    const {account, updateAccountData} = useAccount();
-    const [isCheckingNewBlock, setIsCheckingNewBlock] = React.useState<boolean>(true)
-
-
-    React.useEffect(() => {
-
-        providerState!.request({method: 'eth_newBlockFilter'})
-        .then(filterId => {
-            
-            if(!filterId) {
-
-                setIsCheckingNewBlock(prev => prev = false);
-                return;
-            }
-
-            const checkIfNewBlock = () => {
-
-                setTimeout(() => {
-                    
-                    providerState!.request({method: 'eth_getFilterChanges', params: [filterId]})
-                    .then(result => {
-                        
-                        if(result.length > 0) { // block has been changed
-                            updateAccountData(account.account!);
-                            console.log('update');
-                        }
-
-                        if(isCheckingNewBlock) checkIfNewBlock();
-                    })
-                }, 500);
-            }
     
-            checkIfNewBlock();
-        })
-        .catch(error => {console.log(error)});
-
-        return () => {
-            console.log('cancel');
-            setIsCheckingNewBlock(prev => prev = false);
-        }
-    }, []);
-
 
     return (
         <Flex direction = {'row'}>
@@ -76,11 +34,14 @@ function BalanceView({accountBalance}: IBalanceViewProps): JSX.Element {
             </Flex>
             <Spacer/>
             <Box>
-                <Heading opacity = {0.5} size = {isPhoneHardware(hardware) ? '4xl' : '2xl'}>balance</Heading>
-                <Text textAlign={'end'} fontSize = {isPhoneHardware(hardware) ? 300 : 175}>
-                    {accountBalance}
-                </Text>
+                <Heading opacity = {0.5} size = {isPhoneHardware(hardware) ? '4xl' : '2xl'} textAlign = {'end'}>balance</Heading>
+                <Tooltip label = {accountBalance} placement = {'left'}>
+                    <Text textAlign={'end'} fontSize = {isPhoneHardware(hardware) ? 300 : 175}>
+                        {accountBalance.toFixed(2)}
+                    </Text>
+                </Tooltip>
             </Box>
+            <NewBlockEvent/>
         </Flex>
     );
 }

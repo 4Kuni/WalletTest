@@ -1,9 +1,10 @@
 import * as React from 'react';
 import EthereumProvider from '../components/EthereumProvider/EthereumProvider';
-import AccountProvider from '../components/SideBar/Account/AccountProvider';
+import AccountProvider from '../components/AccountProvider/AccountProvider';
 import useReloadElement from '../utils/Hooks/useReloadElement';
-import { Hardware, IGlobalSettingsProvider, IProviderProps, MainContent } from '../types/Types';
+import { ConnectWay, Hardware, IGlobalSettingsProvider, IProviderProps, MainContent } from '../types/Types';
 import AlertDialogErrorProvider from '../components/AlertDialogErrorProvider/AlertDialogErrorProvider';
+import MetamaskProvider from '../components/ConnectMetamask/MetamaskProvider';
 
 
 
@@ -13,15 +14,16 @@ const DEFAULT_MAIN_CONTENT_VALUE: MainContent = 'wallet';
 let hardware: Hardware;
 
 function isPhoneHardware(hardware: Hardware): boolean {
-    const f = (hardware === 'android' || hardware === 'iphone');
-    return f;
+    
+    return (hardware === 'android' || hardware === 'iphone');
 }
 
 const DEFAULT_CONTEXT_VALUE: IGlobalSettingsProvider = {
     hardware: DEFAULT_HARDWARE_TYPE,
     isPhoneHardware,
     mainContent: 'wallet',
-    setMainContent: () => {}
+    setMainContent: () => {},
+    connectWay: {current: ''}
 }
 
 function detectHardware(): Hardware {
@@ -44,6 +46,7 @@ export default function GlobalSettingsProvider({children}: IProviderProps): JSX.
 
     const [mainContent, setMainContent] = React.useState<MainContent>(DEFAULT_MAIN_CONTENT_VALUE);
     const {reloadElement} = useReloadElement();
+    const connectWay = React.useRef<ConnectWay>('');
 
     React.useEffect(() => {
         
@@ -53,11 +56,13 @@ export default function GlobalSettingsProvider({children}: IProviderProps): JSX.
 
 
     return (
-        <GlobalSettingsContext.Provider value = {{hardware, isPhoneHardware, mainContent, setMainContent}}>
+        <GlobalSettingsContext.Provider value = {{hardware, isPhoneHardware, mainContent, setMainContent, connectWay}}>
             <AlertDialogErrorProvider>
                 <EthereumProvider>
                     <AccountProvider>
-                        {children}
+                        <MetamaskProvider>
+                            {children}
+                        </MetamaskProvider>
                     </AccountProvider>
                 </EthereumProvider>
             </AlertDialogErrorProvider>

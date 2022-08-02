@@ -3,7 +3,7 @@ import {
 } from '@chakra-ui/react';
 import * as React from 'react';
 import useGlobalSettings from '../../GlobalSettings/useGlobalSettings';
-import useAccount from '../SideBar/Account/useAccount';
+import useAccount from '../AccountProvider/useAccount';
 import getTransactions from './getTransactions';
 
 
